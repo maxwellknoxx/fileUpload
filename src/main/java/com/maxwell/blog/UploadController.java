@@ -39,6 +39,12 @@ public class UploadController {
 		return mv;
 	}
 
+	@GetMapping("/uploadMultiple")
+	public ModelAndView pageUploadMultiple() {
+		ModelAndView mv = new ModelAndView("/uploadMultiple");
+		return mv;
+	}
+
 	/**
 	 * Allow to upload a single file.
 	 * 
@@ -61,7 +67,24 @@ public class UploadController {
 			mv.addObject("message", "File with name " + file.getOriginalFilename() + " already exist!");
 			mv.addObject("files", dbFileStorageService.findAll());
 		}
-		
+
+		return mv;
+	}
+
+	@PostMapping("/multiple")
+	public ModelAndView doMultipleUpload(@RequestParam("files") MultipartFile[] files) {
+		ModelAndView mv = new ModelAndView("/uploadMultiple");
+		try {
+			for (MultipartFile file : files) {
+				uploadFile(file);
+			}
+
+		} catch (Exception e) {
+			mv.addObject("message", e.getMessage());
+		}
+
+		mv.addObject("files", dbFileStorageService.findAll());
+
 		return mv;
 	}
 
@@ -73,7 +96,6 @@ public class UploadController {
 	 */
 	@GetMapping("/downloadFile/{fileId}")
 	public ResponseEntity<Resource> downloadFile(@PathVariable String fileId) {
-		// Load file from database
 		DBFile dbFile = dbFileStorageService.getFile(fileId);
 
 		if (dbFile == null) {
