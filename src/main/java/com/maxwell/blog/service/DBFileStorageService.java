@@ -41,7 +41,7 @@ public class DBFileStorageService {
 		}
 	}
 	
-	public Boolean updateDownloadLink(DBFile dbFile) {
+	public boolean updateDownloadLink(DBFile dbFile) {
 		if(dbFileRepository.save(dbFile) != null) {
 			return true;
 		}
@@ -54,11 +54,10 @@ public class DBFileStorageService {
     }
 	
 	public List<DBFile> findAll(){
-		List<DBFile> files = dbFileRepository.findAll();
-		return files;
+		return dbFileRepository.findAll();
 	}
 
-	public Boolean fileExist(String fileName) {
+	public boolean fileExist(String fileName) {
 		DBFile file = dbFileRepository.findByFileName(fileName);
 		if (file != null) {
 			return true;
